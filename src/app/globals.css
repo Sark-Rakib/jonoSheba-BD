@@ -1,26 +1,179 @@
 @import "tailwindcss";
 
+/*
+ * JonoSheba BD design tokens.
+ * Bangladesh-inspired bottle green as primary, warm neutrals, restrained accents.
+ */
+@theme {
+  --font-sans: var(--font-hind-siliguri), "Hind Siliguri", "Noto Sans Bengali",
+    ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary-50: #e9f6ef;
+  --color-primary-100: #c9e9d8;
+  --color-primary-200: #9dd8b9;
+  --color-primary-300: #6cc197;
+  --color-primary-400: #3fa573;
+  --color-primary-500: #1c8a58;
+  --color-primary-600: #0f7348;
+  --color-primary-700: #0b5c3a;
+  --color-primary-800: #08472d;
+  --color-primary-900: #063522;
+  --color-primary-950: #042216;
+
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fef3c7;
+  --color-accent-200: #fde68a;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+  --color-accent-700: #b45309;
+
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-500: #dc2626;
+  --color-danger-600: #b91c1c;
+  --color-danger-700: #991b1b;
+
+  --color-surface: #f6f8f7;
+  --color-surface-muted: #eef2f0;
+  --color-ink: #14201a;
+  --color-ink-muted: #4d5c54;
+  --color-ink-subtle: #6b7a71;
+  --color-line: #dde5e0;
+  --color-line-strong: #c6d2cb;
+
+  --radius-card: 0.9rem;
+
+  --shadow-card: 0 1px 2px rgb(20 32 26 / 0.05), 0 4px 16px rgb(20 32 26 / 0.06);
+  --shadow-card-hover: 0 2px 4px rgb(20 32 26 / 0.06),
+    0 10px 28px rgb(20 32 26 / 0.1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-primary-200);
+  color: var(--color-primary-900);
+}
+
+@layer base {
+  *:focus-visible {
+    outline: 2px solid var(--color-primary-600);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  p {
+    line-height: 1.7;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+}
+
+/* v4 custom utility so `.btn` can be @apply-ed by the button variants below. */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-55;
+}
+
+@layer components {
+  .container-page {
+    @apply w-full px-4;
+  }
+
+  .card {
+    @apply rounded-card border border-line bg-white shadow-card;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800;
+  }
+
+  .btn-secondary {
+    @apply btn border border-line-strong bg-white text-ink hover:bg-surface-muted;
+  }
+
+  .btn-danger {
+    @apply btn bg-danger-600 text-white hover:bg-danger-700;
+  }
+
+  .btn-ghost {
+    @apply btn text-ink-muted hover:bg-surface-muted hover:text-ink;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-ink;
+  }
+
+  .field-input {
+    @apply block w-full rounded-lg border border-line-strong bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-subtle focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 disabled:bg-surface-muted;
+  }
+
+  .field-error {
+    @apply mt-1.5 text-sm font-medium text-danger-600;
+  }
+
+  .section-title {
+    @apply text-xl font-semibold text-ink sm:text-2xl;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
